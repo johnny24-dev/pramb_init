@@ -1,0 +1,65 @@
+
+version: '3.8'
+
+services:
+
+  auth_db:
+    container_name: auth_db
+    image: postgres:latest
+    restart: always
+    environment:
+      - DBHOST=localhost
+      - POSTGRES_DB=pramb_auth_service
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pramb123
+    ports:
+      - 5432:5432
+    volumes:
+      - auth_db:/var/lib/postgresql/data
+    # command: -p 5433  
+    networks:
+      - pramb
+
+  gate_way:
+    build:
+      context: ./api_gateway
+      dockerfile: Dockerfile.gateway
+    ports:
+      - 8000:8000
+    volumes:
+      - ./api_gateway:/go/src/app
+    environment:
+      - PORT=:8000
+      - AUTHSVCURL=localhost:8889
+    networks:
+      - pramb
+
+  auth_service:
+    build:
+      context: ./auth_service
+      dockerfile: Dockerfile.auth
+    restart: always
+    ports:
+      - 8889:8889
+    volumes:
+      - ./auth_service:/go/src/app
+    environment:
+      - DBHOST=localhost
+      - DBNAME=pramb_auth_service
+      - DBUSER=postgres
+      - DBPORT=5432
+      - DBPASSWORD=pramb123
+      - SECRET_KEY=pramb_secret_2024_@@_@@
+      - EMAIL=namng24.work@gmail.com
+      - PASSWORD=wcpqywemrrfssvlg
+    depends_on:
+      - auth_db
+    networks:
+      - pramb
+
+volumes:
+    auth_db:
+        driver: local
+
+networks:
+  pramb:

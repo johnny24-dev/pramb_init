@@ -1,0 +1,148 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "./pkg/pb";
+
+service AuthService {
+  rpc SendEmailVerifyCode(SendEmailVerifyRequest) returns (SendEmailVerifyResponse){}
+  rpc VerifyEmail(VerifyEmailRequest) returns (VerifyEmailResponse) {}
+  rpc UpdatePassword(UpdatePasswordRequest) returns (UpdatePasswordReponse){}
+  rpc Register(RegisterRequest) returns (RegisterResponse) {}
+  rpc RegisterValidate(RegisterValidateRequest) returns (RegisterValidateResponse) {}
+  rpc Login(LoginRequest) returns (LoginResponse) {}
+  rpc Validate(ValidateRequest) returns (ValidateResponse) {}
+  rpc ForgotPassword(ForgotPasswordRequest) returns (ForgotPasswordResponse){}
+  rpc ChangePassword(ChangePasswordRequest) returns (ForgotPasswordResponse) {}
+  rpc GetUserInfo(UserInfoRequest) returns (UserInfoResponse){}
+}
+
+
+// UserInfo
+
+message UserInfoRequest {
+  int64 uid = 1;
+}
+
+message UserInfoResponse {
+  int64 status = 1;
+  string error = 2;
+  int64 id = 3;
+  string user_name = 4;
+  int64 pid = 5;
+  string phone = 6;
+  string email = 7;
+  int64 vip_level = 8;
+  bool is_verified = 9;
+  bool is_admin = 10;
+  bool can_trade = 11;
+  bool can_withdraw = 12;
+  bool can_deposit = 13;
+}
+
+//Send Email Verify Code
+message SendEmailVerifyRequest {
+  string email = 1;
+  int64 type = 2;
+}
+
+message SendEmailVerifyResponse {
+  int64 status = 1;
+  string error = 2;
+}
+
+// Verify Email
+message VerifyEmailRequest {
+  string otp = 1;
+}
+
+message VerifyEmailResponse {
+  int64 status = 1;
+  string error = 2;
+}
+
+//Update Password
+
+message UpdatePasswordRequest {
+  string otp = 1;
+  string password = 2;
+}
+
+message UpdatePasswordReponse {
+  int64 status = 1;
+  string error = 2;
+  string accesstoken =3;
+  string refreshToken = 4;
+}
+
+// Register
+
+message RegisterRequest {
+    string email = 1;
+    string password = 2;
+    string phone = 3;
+  }
+  
+  message RegisterResponse {
+    int64 status = 1;
+    string error = 2;
+  }
+
+// Register Validate
+
+message RegisterValidateRequest{
+  string otp =1;
+}
+
+message RegisterValidateResponse{
+  int64 status = 1;
+  string error = 2;
+  int64 id = 3;
+}
+
+// Login
+
+message LoginRequest{
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResponse{
+  int64 status = 1;
+  string error = 2;
+  string accesstoken =3;
+  string refreshToken = 4;
+}
+
+//Validate
+
+message ValidateRequest{
+  string accesstoken = 1;
+}
+
+message ValidateResponse{
+  int64 status = 1;
+  string error = 2;
+  int64 userid = 3;
+  string source = 4;
+}
+
+// Forgot Password
+
+message ForgotPasswordRequest{
+  string email = 1;
+}
+
+message ForgotPasswordResponse{
+  int64 status = 1;
+  string error = 2;
+}
+
+// Change Password
+
+message ChangePasswordRequest{
+  int64  id = 1;
+  string password = 2;
+}
+
+
